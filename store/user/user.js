@@ -1,6 +1,6 @@
 // initial state
 const state = {
-    show: 'addresses'
+    show: 'create'
 }
 
 // getters

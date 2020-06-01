@@ -1,16 +1,22 @@
 <template>
-    <section class="addresses" v-show="show === 'addresses'">
-        <div class="address">
-            <h2>Your location</h2>
-            <p>Where are you right now?</p>
-            <GmapAutocomplete @place_changed="setAddressOne" :class="Object.keys(markers.addressOne).length !== 0 ? 'filled' : 'empty'"/>
+    <section class="create" v-show="show === 'create'">
+
+        <!-- als er minstens 1 adres is ingevuld, toon dan velden voor de ingevulde locaties -->
+        <div class="route" v-if="routes[0].locations.length > 0" v-for="(route, index) in routes" :key="'route_' + index">
+            <div class="address" v-for="(address, index) in route.locations" :key="'address_' + index">
+                <strong>{{ route.type }}</strong>
+                <div v-html="route.names[index]"></div>
+             </div>               
+        </div>
+        
+        <h2>Add an address</h2>
+        <!-- zo niet, toon 1 veld om mee te starten -->
+        <div class="route">
+            <div class="address">
+                <GmapAutocomplete @place_changed="addAddress" :value="search" />
+             </div>               
         </div>
 
-        <div class="address">
-            <h2>Your friend's location</h2>
-            <p>We need another location to find the middle</p>
-            <GmapAutocomplete @place_changed="setAddressTwo" :class="Object.keys(markers.addressTwo).length !== 0 ? 'filled' : 'empty'"/>
-        </div>
     </section>
 </template>
 
@@ -18,49 +24,42 @@
 export default {
     name: 'addresses',
 
+    data() {
+        return {
+            addresses: [
+
+            ],
+            search: ''
+        }
+    },
+
     computed: {
-        addressOne: function() {
-            return this.$store.state.map.addressOne
+        routes: function() {
+            return this.$store.state.map.routes
         },
-        addressTwo: function() {
-            return this.$store.state.map.addressTwo
-        },
-        markers: function() {
-            return this.$store.state.map.markers
-        },        
         show: function() {
             return this.$store.state.user.show
         }
     },
 
     methods: {
-        setAddressOne(address) {
+        addAddress(address) {
 
         // set address one in store
         let payloadAddress = {
             address: address,
-            type: 'addressOne'
+            type: 'car'
         }
         this.$store.dispatch('map/changeAddress', payloadAddress)
 
-        },
-
-        setAddressTwo(address) {
-
-        // set address two in store
-        let payloadAddress = {
-            address: address,
-            type: 'addressTwo'
-        }
-        this.$store.dispatch('map/changeAddress', payloadAddress)
-
+        this.search = ''
         },
     }
 }
 </script>
 
 <style scoped lang="scss">
-.addresses {
+.create {
     padding: 0 1em;
 
     .address {

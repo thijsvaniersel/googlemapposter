@@ -1,7 +1,7 @@
 <template>
     <div class="buttons">
-        <a @click="switchShow('addresses')" :class="show == 'addresses' ? 'active' : ''">Addresses</a>
-        <a @click="switchShow('suggestions')" :class="show == 'suggestions' ? 'active' : ''">Meet here</a>
+        <a @click="switchShow('create')" :class="show == 'create' ? 'active' : ''">CREATE</a>
+        <a @click="switchShow('export')" :class="show == 'export' ? 'active' : ''">EXPORT</a>
         <div class="clear"></div>
     </div>
 </template>
