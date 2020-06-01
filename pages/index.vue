@@ -11,6 +11,12 @@
           <!-- component with logo en tagline -->
           <top />
 
+          <img :src="'https://maps.googleapis.com/maps/api/staticmap?' + makeUrlParamsString(urlArray)" />
+
+          <br />
+
+          {{ makeUrlParamsString(urlArray) }}
+
           <!-- component to switch between addresses and meet here -->
           <buttons />
 
@@ -113,8 +119,35 @@ export default {
     addresses
   },
 
+        // { markers: "color:blue|label:C|62.109733,-145.540936" },
+        // { markers: "color:red|label:A|62.107733,-145.546950|62.107733,-145.586950" },  
+        // { path: "color:blue|weight:5|geodesic:1|62.139733,-145.240936|62.107733,-145.546950|62.107733,-145.586950" },
+
   data(){
     return {
+      routes: [
+        {
+          type: "car",
+          locations: [
+            "62.109733,-145.540936",
+            "62.108733,-145.569950"               
+          ]
+        },
+        {
+          type: "plane",
+          locations: [
+            "62.107733,-145.546950",
+            "62.107733,-145.566950"            
+          ]
+        }        
+      ],
+      urlArray: [
+        { center: "62.107733,-145.541936" },
+        { zoom: 13 },
+        { size: "600x330" },
+        { maptype: "roadmap" },
+        { key: "AIzaSyCO0cZ5fvTGwONx1udbrR7GAUoUsSf83vg" }
+      ],
       infoContent: '',
       infoWindowPos: {
         lat: 0,
@@ -151,6 +184,107 @@ export default {
   },
 
   methods: {
+    makeUrlParamsString(array){
+      var str = ""    
+      var i
+      var j
+
+      // loop door de array met objecten
+      for (i = 0; i < array.length; i++) {
+
+        // als de string nog leeg is, voeg geen & toe
+        if (str != "") {
+            str += "&";
+        }
+        
+        // krijg de keys en values van dit object in een array
+        let entries = Object.entries(array[i])       
+
+        // entries is een array met daarin array voor een key en een value
+        // pak dus altijd de 0. Daarin is [0] de key en [1] de value
+        str += entries[0][0] + "=" + encodeURIComponent(entries[0][1]);        
+      }
+
+      str = this.addMarkers(str);
+      str = this.addPath(str);
+
+      return str;
+    },
+
+    addMarkers(str){
+           
+      var i      
+      var j
+      // loop door de array met routes
+      for (i = 0; i < this.routes.length; i++) {
+        
+        // pak de locaties van deze route
+        var locations = this.routes[i].locations
+        var type = this.routes[i].type
+
+        // als de string nog leeg is, voeg geen & toe
+        if (str != "") {
+            str += "&";
+        }
+
+        // open een nieuwe markers parameter
+        str += "markers=" + encodeURIComponent("color:red|label:C|")
+
+        // loop door de locaties en plak ze allemaal in een markers object
+        for (j = 0; j < locations.length; j++) {
+
+          // bepaal nog de stijl van de marker op basis van de type
+
+          // voeg een | toe vanaf nummer 1
+          if(j == 1){
+            str += encodeURIComponent('|')
+          }
+
+          str += encodeURIComponent(locations[j]);      
+
+        }
+      }
+
+      return str
+    },
+
+    addPath(str){
+           
+      var i      
+      var j
+
+      // loop door de array met routes
+      for (i = 0; i < this.routes.length; i++) {
+        
+        // pak de locaties van deze route
+        var locations = this.routes[i].locations
+        var type = this.routes[i].type
+
+        // als de string nog leeg is, voeg geen & toe
+        if (str != "") {
+            str += "&";
+        }
+
+        // open een nieuwe markers parameter
+        str += "path=" + encodeURIComponent("color:red|weight:5|geodesic:true|")
+
+        // loop door de locaties en plak ze allemaal in een markers object
+        for (j = 0; j < locations.length; j++) {
+
+          // bepaal nog de stijl van de marker op basis van de type
+
+          // voeg een | toe vanaf nummer 1
+          if(j == 1){
+            str += encodeURIComponent('|')
+          }
+
+          str += encodeURIComponent(locations[j]);      
+
+        }
+      }
+
+      return str
+    },
 
     calculateMidPoint() {
 
