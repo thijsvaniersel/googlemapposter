@@ -3,19 +3,24 @@
 
         <!-- als er minstens 1 adres is ingevuld, toon dan velden voor de ingevulde locaties -->
         <div class="route" v-if="routes[0].locations.length > 0" v-for="(route, index) in routes" :key="'route_' + index">
-            <div class="address" v-for="(address, index) in route.locations" :key="'address_' + index">
+
+            Route nummer {{ routeCount }}
+            <div class="address" v-for="(address, index) in route.locations" :key="'address_' + index" v-if="route.locations && route.locations.length > 0">
                 <strong>{{ route.type }}</strong>
                 <div v-html="route.names[index]"></div>
-             </div>               
+             </div>
         </div>
-        
+
         <h2>Add an address</h2>
         <!-- zo niet, toon 1 veld om mee te starten -->
         <div class="route">
             <div class="address">
                 <GmapAutocomplete @place_changed="addAddress" :value="search" />
-             </div>               
+             </div>
         </div>
+
+        <!-- <h2>Add a route</h2>
+        <button @click="addRoute()">Add</button> -->
 
     </section>
 </template>
@@ -26,10 +31,8 @@ export default {
 
     data() {
         return {
-            addresses: [
-
-            ],
-            search: ''
+            search: '',
+            routeCount: 0
         }
     },
 
@@ -43,17 +46,25 @@ export default {
     },
 
     methods: {
-        addAddress(address) {
+      // addRoute(){
+      //   let payload = {
+      //     count: this.routeCount++,
+      //     type: 'car'
+      //   }
+      //   this.$store.dispatch('map/addRoute', payload)
+      // },
+      addAddress(address) {
 
         // set address one in store
         let payloadAddress = {
             address: address,
-            type: 'car'
+            type: 'car',
+            count: this.routeCount
         }
         this.$store.dispatch('map/changeAddress', payloadAddress)
 
         this.search = ''
-        },
+      },
     }
 }
 </script>

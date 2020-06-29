@@ -5,8 +5,8 @@ const state = {
       type: "car",
       locations: [],
       names: []
-    }     
-  ],            
+    }
+  ],
 }
 
 // getters
@@ -30,8 +30,19 @@ const mutations = {
       return
     }
 
+    // change order of lat and lng
+    // https://openlayers.org/en/latest/doc/faq.html
+
+    var lat = Number(payload.address.geometry.location.lat())
+    var lng = Number(payload.address.geometry.location.lng())
+    var count = payload.count
+
     // add address to the routes object
-    state.routes[0].locations.push(payload.address.geometry.location.lat() + ',' + payload.address.geometry.location.lng())
+    state.routes[0].locations.push([lng,lat])
+
+
+    // Make this to points to a route
+    // https://gis.stackexchange.com/questions/298309/showing-route-between-two-points-in-openlayers-3
 
     // add name in different array omdat deze niet mee moet gaan in de url
     state.routes[0].names.push(payload.address.adr_address)

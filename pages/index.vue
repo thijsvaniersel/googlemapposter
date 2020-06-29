@@ -5,6 +5,10 @@
       <nav class="sidebar">
         <div class="sidebarInner">                    
 
+          <!-- https://openlayers.org/en/latest/examples/export-map.html -->
+
+
+
           {{ makeUrlParamsString(urlArray) }}
 
           <!-- component to switch between addresses and meet here -->
@@ -17,8 +21,8 @@
       </nav>
 
       <!-- map -->
-      <main role="main" id="map">
-        <img :src="'https://maps.googleapis.com/maps/api/staticmap?' + makeUrlParamsString(urlArray)" />
+      <main role="main" id="mainMap">
+             <img :src="'https://maps.googleapis.com/maps/api/staticmap?' + makeUrlParamsString(urlArray)" />
       </main>
     </div>
   </no-ssr>
@@ -41,8 +45,8 @@ export default {
     return {
       urlArray: [
         { center: "52.1601144,4.4970097" },
-        { size: "4960x7016" },
-        { scale: 4 },
+        { size: "2048x2048" },
+        { scale: 1 },
         { maptype: "roadmap" },
         { key: "AIzaSyAqoY35uszevWNM62s3QQCMnmvUzXGkuh0" }
       ]
@@ -54,6 +58,7 @@ export default {
       return this.$store.state.map.routes
     },
   },
+
 
   methods: {
     makeUrlParamsString(array){
@@ -210,7 +215,7 @@ export default {
     width: 50%;
   }
 
-  #map {
+  #mainMap {
     float: right;
     width: 50%;
 
@@ -220,6 +225,11 @@ export default {
 
     }
   }
+
+   .map {
+        width: 100%;
+        height:400px;
+      }
 
   .sidebar {
     width: 50%;

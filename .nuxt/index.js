@@ -15,6 +15,7 @@ import { createStore } from './store.js'
 import nuxt_plugin_bootstrapvue_21e033f5 from 'nuxt_plugin_bootstrapvue_21e033f5' // Source: ./bootstrap-vue.js (mode: 'all')
 import nuxt_plugin_axios_9ff70874 from 'nuxt_plugin_axios_9ff70874' // Source: ./axios.js (mode: 'all')
 import nuxt_plugin_googleMaps_67765294 from 'nuxt_plugin_googleMaps_67765294' // Source: ../plugins/googleMaps (mode: 'client')
+import nuxt_plugin_vuelayers_224ac916 from 'nuxt_plugin_vuelayers_224ac916' // Source: ../plugins/vuelayers.js (mode: 'client')
 
 // Component: <ClientOnly>
 Vue.component(ClientOnly.name, ClientOnly)
@@ -175,6 +176,10 @@ async function createApp(ssrContext) {
 
   if (process.client && typeof nuxt_plugin_googleMaps_67765294 === 'function') {
     await nuxt_plugin_googleMaps_67765294(app.context, inject)
+  }
+
+  if (process.client && typeof nuxt_plugin_vuelayers_224ac916 === 'function') {
+    await nuxt_plugin_vuelayers_224ac916(app.context, inject)
   }
 
   // If server-side, wait for async component to be resolved first

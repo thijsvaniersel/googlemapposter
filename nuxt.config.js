@@ -48,7 +48,9 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    { src: './plugins/googleMaps', ssr: false }
+    { src: './plugins/googleMaps', ssr: false },
+    { src: './plugins/vuelayers.js', ssr: false },
+    // { src: './plugins/ol.js', ssr: false }    
   ],
 
   /*
@@ -60,7 +62,9 @@ module.exports = {
     // Doc: https://bootstrap-vue.js.org/docs/
     'bootstrap-vue/nuxt',
     // load scss vars
-    '@nuxtjs/style-resources'
+    '@nuxtjs/style-resources',
+    // vuelayers
+    '~/shared/vueLayers',
   ],
   /*
   ** Axios module configuration
@@ -73,6 +77,11 @@ module.exports = {
   ** Build configuration
   */
   build: {
+    // vendor: [
+    //   'ol',
+    // ]    
+    // this modules are included in the "vendor" js file
+    // because we use them in every page
     /*
     ** You can extend webpack config here
     */
