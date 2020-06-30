@@ -32,10 +32,10 @@ module.exports = {
   // Style resource config
   styleResources: {
     scss: [
-      './assets/vars/*.scss',      
+      './assets/vars/*.scss',
       ]
   },
-    
+
   /*
   ** Router settings to work in a subdirectory on the server
   */
@@ -50,7 +50,8 @@ module.exports = {
   plugins: [
     { src: './plugins/googleMaps', ssr: false },
     { src: './plugins/vuelayers.js', ssr: false },
-    // { src: './plugins/ol.js', ssr: false }    
+    { src: './plugins/polyline.js', ssr: false }
+    // { src: './plugins/ol.js', ssr: false }
   ],
 
   /*
@@ -79,7 +80,7 @@ module.exports = {
   build: {
     // vendor: [
     //   'ol',
-    // ]    
+    // ]
     // this modules are included in the "vendor" js file
     // because we use them in every page
     /*

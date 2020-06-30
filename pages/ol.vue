@@ -1,53 +1,65 @@
 <template>
   <div>
       <no-ssr>
-        <div>
+        <div id="route_nav">
 
           <button @click="exportMap">Export</button>
           {{ message }}
 
           <button @click="fit">FIT</button>
 
-          <buttons />
           <addresses />
 
-          <div v-for="(route, index) in routes" :key="index" v-if="routes[0].locations.length > 0">
-            <div v-if="route.locations !== undefined && route.locations.length > 0">
-              {{ route.locations }}
+          <!-- <div v-for="(route, index) in routes" :key="index" v-if="routes[0].route.length > 0">
+            <div v-if="route.route !== undefined && route.route.length > 0">
+              {{ route.route }}
             </div>
-          </div>
+          </div> -->
         </div>
 
-        <vl-map ref="map" :load-tiles-while-animating="true" :load-tiles-while-interacting="true" :data-projection="'EPSG:4326'" @created="mapCreated">
+        <vl-map ref="map" :load-tiles-while-animating="true" :load-tiles-while-interacting="true" :data-projection="'EPSG:4326'" @created="mapCreated" id="map">
           <vl-view ref="mapView" :zoom.sync="zoom" :center.sync="center"></vl-view>
 
-          <vl-layer-tile id="osm">
+          <vl-layer-tile>
             <vl-source-osm></vl-source-osm>
           </vl-layer-tile>
+
 
           <vl-layer-vector>
             <vl-source-vector ref="vectorSource" :projection="'EPSG:4326'">
 
-              <vl-feature v-for="(route, index) in routes" :key="index" v-if="routes[0].locations.length > 0 && route.locations !== undefined && route.locations.length > 0">
-
-                <vl-geom-line-string :coordinates="route.locations"></vl-geom-line-string>
+              <vl-feature v-for="(route, index) in routes" :key="index + '_line'" v-if="routes[0].route.length > 0 && route.route !== undefined && route.route.length > 0">
+                <vl-geom-line-string :coordinates="route.route"></vl-geom-line-string>
                 <vl-style-box>
                   <vl-style-fill color="white"></vl-style-fill>
+                  <!-- auto lijn -->
                   <vl-style-stroke
+                    v-if="route.type == 'car'"
                     color="red"
-                    :width="10"
+                    :width="6"
+                  ></vl-style-stroke>
+                  <!-- vliegtuig lijn -->
+                  <vl-style-stroke
+                    v-if="route.type == 'airplane'"
+                    color="blue"
+                    :width="6"
                   ></vl-style-stroke>
                 </vl-style-box>
               </vl-feature>
 
-              <!-- <vl-feature>
-                <vl-geom-multi-point :coordinates="[[51.9244201,4.4777326],[51.9244201,4.4777326],[52.3666969,4.8945398]]"></vl-geom-multi-point>
-              </vl-feature> -->
+
+              <vl-feature v-for="(route, index) in routes" :key="index + '_dot'" v-if="routes[0].route.length > 0 && route.route !== undefined && route.route.length > 0">
+                <vl-geom-multi-point :coordinates="route.locations"></vl-geom-multi-point>
+                <vl-style-box>
+                  <vl-style-circle :radius="10">
+                    <vl-style-fill color="white"></vl-style-fill>
+                    <vl-style-stroke color="red"></vl-style-stroke>
+                  </vl-style-circle>
+                </vl-style-box>
+              </vl-feature>
 
             </vl-source-vector>
           </vl-layer-vector>
-
-
 
         </vl-map>
       </no-ssr>
@@ -66,22 +78,19 @@ var dims = {
 };
 
 
-import buttons from '@/components/buttons'
 import addresses from '@/components/addresses'
 export default {
   name: 'openlayers',
 
   components: {
-      buttons,
       addresses
   },
 
   data() {
     return {
-      zoom: 6,
-      center: [4.4777326,51.9244201],
+      zoom: 10,
       features: [],
-      format: 'a0',
+      format: 'a2',
       resolution: 72,
       message: '',
     }
@@ -93,6 +102,9 @@ export default {
       },
       routes() {
         return this.$store.state.map.routes
+      },
+      center() {
+        return this.$store.state.map.center
       }
   },
 
@@ -102,15 +114,18 @@ export default {
 
   methods: {
     mapCreated (vm) {
-      console.log(vm) // vl-map instance
-      console.log(vm.$map) // ol.Map instance
-    },
-    convertGoogleMapCordsToOpenLayerCords (lat, long) {
-      // return ol.proj.fromLonLat([long, lat]);
+      // http://router.project-osrm.org/route/v1/driving/15.458470,47.064970;15.476760,47.071100;15.458470,47.064970?overview=full
+
+      // OSRM REQUEST -> dna decoden en doorgeven als locations aan de feature
+
+      // console.log(this.$polyline)
+      // console.log(this.$polyline.decode('_p~iF~ps|U_ulLnnqC_mqNvxq`@'))
     },
     exportMap() {
 
       if(process.client){
+
+        this.fit()
 
         const jsPDF = require('jspdf');
 
@@ -119,14 +134,14 @@ export default {
         var width = Math.round(dim[0] * this.resolution / 25.4);
         var height = Math.round(dim[1] * this.resolution / 25.4);
         var size = /** @type {module:ol/size~Size} */ (map.getSize());
-        var extent = map.getView().calculateExtent(size);
+        var extent = this.$refs.vectorSource.$source.getExtent();
 
         this.message = 'exporting...';
 
         map.once('rendercomplete', function(event) {
           var canvas = event.context.canvas;
           var data = canvas.toDataURL('image/jpeg');
-          var pdf = new jsPDF('landscape', undefined, this.format);
+          var pdf = new jsPDF('portait', undefined, this.format);
           pdf.addImage(data, 'JPEG', 0, 0, dim[0], dim[1]);
           pdf.save('map.pdf');
           // Reset original map size
@@ -171,9 +186,18 @@ export default {
     margin: 0;
     padding: 0;
   }
+  #route_nav {
+    position: absolute;
+    top: 0;
+    z-index: 2;
+    background: white;
+    width: 30%;
+  }
   .vl-map {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width: 841px;
+    height: 1189px;
+    top: 0;
+    right: 0;
   }
 </style>

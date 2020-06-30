@@ -1,114 +1,61 @@
 <template>
-    <section class="create" v-show="show === 'create'">
+    <section class="create">
 
         <!-- als er minstens 1 adres is ingevuld, toon dan velden voor de ingevulde locaties -->
         <div class="route" v-if="routes[0].locations.length > 0" v-for="(route, index) in routes" :key="'route_' + index">
 
-            Route nummer {{ routeCount }}
-            <div class="address" v-for="(address, index) in route.locations" :key="'address_' + index" v-if="route.locations && route.locations.length > 0">
-                <strong>{{ route.type }}</strong>
-                <div v-html="route.names[index]"></div>
-             </div>
-        </div>
+          <div v-if="index == 0">
+            <iconType :iconString="route.type" />
+          </div>
+          <div v-if="routes[index-1] !== undefined && route.type !== routes[index-1].type">
+            <iconType :iconString="route.type" />
+          </div>
 
-        <h2>Add an address</h2>
-        <!-- zo niet, toon 1 veld om mee te starten -->
-        <div class="route">
-            <div class="address">
-                <GmapAutocomplete @place_changed="addAddress" :value="search" />
-             </div>
+          <div class="address" v-for="(address, indexaddress) in route.locations" :key="'address_' + indexaddress" v-if="route.locations && route.locations.length > 0">
+            <div v-if="route.names[indexaddress] !== undefined" v-html="route.names[indexaddress]" class="route_address"></div>
+          </div>
         </div>
-
-        <!-- <h2>Add a route</h2>
-        <button @click="addRoute()">Add</button> -->
+        <!-- toon adres als er nog geen routes zijn -->
+        <addAddress/>
 
     </section>
 </template>
 
 <script>
+import addAddress from '@/components/add_address'
+import iconType from '@/components/type_icon'
 export default {
     name: 'addresses',
 
-    data() {
-        return {
-            search: '',
-            routeCount: 0
-        }
+    components: {
+      addAddress,
+      iconType
     },
 
     computed: {
         routes: function() {
             return this.$store.state.map.routes
-        },
-        show: function() {
-            return this.$store.state.user.show
         }
-    },
-
-    methods: {
-      // addRoute(){
-      //   let payload = {
-      //     count: this.routeCount++,
-      //     type: 'car'
-      //   }
-      //   this.$store.dispatch('map/addRoute', payload)
-      // },
-      addAddress(address) {
-
-        // set address one in store
-        let payloadAddress = {
-            address: address,
-            type: 'car',
-            count: this.routeCount
-        }
-        this.$store.dispatch('map/changeAddress', payloadAddress)
-
-        this.search = ''
-      },
     }
 }
 </script>
 
 <style scoped lang="scss">
 .create {
-    padding: 0 1em;
+  padding: 1em;
 
-    .address {
-        margin: 2em 0;
-        border-bottom: 1px solid #dedede;
-        padding-bottom: 2em;
+  .route {
+    border: 1px solid #dedede;
+    padding: 1em;
+    margin-bottom: 1em;
 
-        h2 {
-            font-size: 16px;
-            line-height: 23px;
-        }
+    .route_address {
+      padding-left: 1em;
 
-        p {
-        line-height: 6px;
-        color: $gray;
-        }
-
-        input {
-        width: 100%;
-        border: none;
-        padding: 1em;
-        background: $light-gray;
-        color: $dark-blue;
-        font-size: 18px;
-        border: 1px solid $light-gray;
-        transition: .3s all ease;
-
-        &:focus {
-            outline: none;
-            background: none;
-            border: 1px solid $light-gray;
-        }
-
-        &.filled {
-            background: $light-green;
-            color: $green;
-        }
-        }
+      &::before {
+        content: '- '
+      }
     }
-    } // end addresses
+  }
+}
 </style>
