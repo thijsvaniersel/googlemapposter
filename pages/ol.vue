@@ -6,6 +6,7 @@
           <button @click="exportMap">Export</button>
           {{ message }}
 
+
           <button @click="fit">FIT</button>
 
           <addresses />
@@ -20,10 +21,17 @@
         <vl-map ref="map" :load-tiles-while-animating="true" :load-tiles-while-interacting="true" :data-projection="'EPSG:4326'" @created="mapCreated" id="map">
           <vl-view ref="mapView" :zoom.sync="zoom" :center.sync="center"></vl-view>
 
-          <vl-layer-tile>
+          <vl-layer-tile id="osm">
             <vl-source-osm></vl-source-osm>
           </vl-layer-tile>
 
+          <vl-layer-vector render-mode="image">
+            <vl-source-vector :url="'/assets/map/style.json'"/>
+          </vl-layer-vector>
+
+          <!-- <vl-layer-tile id="bingmaps">
+              <vl-source-bingmaps :api-key="apiKey" :imagery-set="imagerySet"></vl-source-bingmaps>
+          </vl-layer-tile> -->
 
           <vl-layer-vector>
             <vl-source-vector ref="vectorSource" :projection="'EPSG:4326'">
@@ -48,7 +56,7 @@
               </vl-feature>
 
 
-              <vl-feature v-for="(route, index) in routes" :key="index + '_dot'" v-if="routes[0].route.length > 0 && route.route !== undefined && route.route.length > 0">
+              <vl-feature v-for="(route, index) in routes" :key="index + '_dot'" v-if="routes[0].locations.length > 0">
                 <vl-geom-multi-point :coordinates="route.locations"></vl-geom-multi-point>
                 <vl-style-box>
                   <vl-style-circle :radius="10">
@@ -77,7 +85,7 @@ var dims = {
   a5: [210, 148]
 };
 
-
+import mapStyle from '@/assets/map/style.json'
 import addresses from '@/components/addresses'
 export default {
   name: 'openlayers',
@@ -93,18 +101,22 @@ export default {
       format: 'a2',
       resolution: 72,
       message: '',
+      apiKey: 'AnqhLoxDaqM4GRk2qR6U641ZFGlZ68HF9OyMTH1lBYOhh6DN8ZFBYkQJk6ThVZ4g',
+      imagerySet: 'CanvasLight',
+      // geojsonUrl: '@/assets/map/style.json',
+      features: [],
     }
   },
 
   computed: {
-      route(){
-        return [[116.544921,40.451633],[116.545264,40.451649],[116.545865,40.451698],[116.546144,40.451551],[116.546337,40.451274],[116.546788,40.451143],[116.547324,40.451078],[116.547539,40.450996],[116.547839,40.450719],[116.548440,40.450506],[116.548933,40.450604],[116.549448,40.450604],[116.550242,40.450376],[116.550865,40.450163],[116.551702,40.449935],[116.552581,40.449576]]
-      },
       routes() {
         return this.$store.state.map.routes
       },
-      center() {
+      center: function() {
         return this.$store.state.map.center
+      },
+      style() {
+        return this.$store.state.style.style
       }
   },
 
@@ -113,6 +125,22 @@ export default {
   },
 
   methods: {
+    styleFuncFactory(){
+return {
+        elements: {
+            area: { fillColor: '#b6e591' },
+            water: { fillColor: '#75cff0' },
+            tollRoad: { fillColor: '#a964f4', strokeColor: '#a964f4' },
+            arterialRoad: { fillColor: '#ffffff', strokeColor: '#d7dae7' },
+            road: { fillColor: '#ffa35a', strokeColor: '#ff9c4f' },
+            street: { fillColor: '#ffffff', strokeColor: '#ffffff' },
+            transit: { fillColor: '#000000' }
+        },
+        settings: {
+            landColor: '#efe9e1'
+        }
+      }
+    },
     mapCreated (vm) {
       // http://router.project-osrm.org/route/v1/driving/15.458470,47.064970;15.476760,47.071100;15.458470,47.064970?overview=full
 
@@ -173,6 +201,7 @@ export default {
 
   watch: {
     routes: function (newRoutes, oldRoutes) {
+      console.log('changed')
       this.fit()
     }
   },

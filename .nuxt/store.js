@@ -19,6 +19,7 @@ void (function updateModules() {
   store.modules = store.modules || {}
 
   resolveStoreModules(require('../store/map/map.js'), 'map/map.js')
+  resolveStoreModules(require('../store/style/style.js'), 'style/style.js')
   resolveStoreModules(require('../store/user/user.js'), 'user/user.js')
 
   // If the environment supports hot reloading...
@@ -28,6 +29,7 @@ void (function updateModules() {
     module.hot.accept([
       '../store/index.js',
       '../store/map/map.js',
+      '../store/style/style.js',
       '../store/user/user.js',
     ], () => {
       // Update `root.modules` with the latest definitions.

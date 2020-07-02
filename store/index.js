@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 // modules
 import map from './map/map'
 import user from './user/user'
+import style from './style/style'
 
 export const strict = false
 
@@ -28,7 +29,8 @@ const createStore = () => {
     namespaced: true,
     modules: {
         map,
-        user
+        user,
+        style
     },
     state,
     getters,
