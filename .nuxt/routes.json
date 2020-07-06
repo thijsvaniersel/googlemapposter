@@ -1,0 +1,14 @@
+[
+  {
+    "name": "ol",
+    "path": "/ol",
+    "component": "C:\\\\lokale projecten\\\\web\\\\googlemapsposter\\\\googlemapposter\\\\pages\\\\ol.vue",
+    "chunkName": "pages/ol"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "C:\\\\lokale projecten\\\\web\\\\googlemapsposter\\\\googlemapposter\\\\pages\\\\index.vue",
+    "chunkName": "pages/index"
+  }
+]

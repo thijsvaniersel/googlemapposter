@@ -18,16 +18,29 @@
           </div> -->
         </div>
 
-        <vl-map ref="map" :load-tiles-while-animating="true" :load-tiles-while-interacting="true" :data-projection="'EPSG:4326'" @created="mapCreated" id="map">
+        <vl-map ref="map" :load-tiles-while-animating="true" :load-tiles-while-interacting="true" :data-projection="'EPSG:4326'" @created="onMapCreated" id="map">
           <vl-view ref="mapView" :zoom.sync="zoom" :center.sync="center"></vl-view>
 
           <vl-layer-tile id="osm">
             <vl-source-osm></vl-source-osm>
           </vl-layer-tile>
 
-          <vl-layer-vector render-mode="image">
+          <!--
+            https://studio.mapbox.com/styles/thijsvaniersel/ckca4nrcp1uwc1jo0m2mf90k3/
+            bij share, kies voor share. Dan developer resources->third party en select fulcrum as type
+          -->
+          <vl-layer-tile>
+            <vl-source-xyz
+              url="https://api.mapbox.com/styles/v1/thijsvaniersel/ckca4nrcp1uwc1jo0m2mf90k3/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidGhpanN2YW5pZXJzZWwiLCJhIjoiY2tjOWR6ejloMWttYTJ2bG0wOWF2ZGlkZyJ9.aBDTsgvAz7ufZX5TnHrPOA"
+            >
+            </vl-source-xyz>
+          </vl-layer-tile>
+
+          {{ style }}
+          <!-- <vl-layer-vector render-mode="image">
             <vl-source-vector :url="'/assets/map/style.json'"/>
-          </vl-layer-vector>
+            <vl-source-vector :url="'https://api.mapbox.com/styles/v1/thijsvaniersel/ckca4nrcp1uwc1jo0m2mf90k3/wmts?access_token=pk.eyJ1IjoidGhpanN2YW5pZXJzZWwiLCJhIjoiY2tjOWR6ejloMWttYTJ2bG0wOWF2ZGlkZyJ9.aBDTsgvAz7ufZX5TnHrPOA'"></vl-source-vector>
+          </vl-layer-vector> -->
 
           <!-- <vl-layer-tile id="bingmaps">
               <vl-source-bingmaps :api-key="apiKey" :imagery-set="imagerySet"></vl-source-bingmaps>
@@ -85,7 +98,7 @@ var dims = {
   a5: [210, 148]
 };
 
-import mapStyle from '@/assets/map/style.json'
+// import mapStyle from '@/assets/map/style.json'
 import addresses from '@/components/addresses'
 export default {
   name: 'openlayers',
@@ -125,29 +138,23 @@ export default {
   },
 
   methods: {
-    styleFuncFactory(){
-return {
-        elements: {
-            area: { fillColor: '#b6e591' },
-            water: { fillColor: '#75cff0' },
-            tollRoad: { fillColor: '#a964f4', strokeColor: '#a964f4' },
-            arterialRoad: { fillColor: '#ffffff', strokeColor: '#d7dae7' },
-            road: { fillColor: '#ffa35a', strokeColor: '#ff9c4f' },
-            street: { fillColor: '#ffffff', strokeColor: '#ffffff' },
-            transit: { fillColor: '#000000' }
-        },
-        settings: {
-            landColor: '#efe9e1'
-        }
-      }
-    },
-    mapCreated (vm) {
-      // http://router.project-osrm.org/route/v1/driving/15.458470,47.064970;15.476760,47.071100;15.458470,47.064970?overview=full
-
-      // OSRM REQUEST -> dna decoden en doorgeven als locations aan de feature
-
-      // console.log(this.$polyline)
-      // console.log(this.$polyline.decode('_p~iF~ps|U_ulLnnqC_mqNvxq`@'))
+    onMapCreated () {
+      // var layer = new VectorTileLayer({
+      //   renderMode: 'vector',
+      //   source: new VectorTileSource({
+      //     format: new MVT(),
+      //     url: 'http://localhost:8080/geoserver/gwc/service/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&LAYER=myvic:suburb_cultural_diversity&STYLE=&TILEMATRIX=EPSG:900913:{z}&TILEMATRIXSET=EPSG:900913&FORMAT=application/x-protobuf;type=mapbox-vector&TILECOL={x}&TILEROW={y}',
+      //   }),
+      // })
+      //
+      // let map = this.$refs.map.$map
+      // fetch('https://api.mapbox.com/styles/v1/thijsvaniersel/ckca4nrcp1uwc1jo0m2mf90k3/wmts?access_token=pk.eyJ1IjoidGhpanN2YW5pZXJzZWwiLCJhIjoiY2tjOWR6ejloMWttYTJ2bG0wOWF2ZGlkZyJ9.aBDTsgvAz7ufZX5TnHrPOA').then(function (response) {
+      //   response.json().then(function (glStyle) {
+      //     applyStyle(layer, glStyle, 'suburb_culture_diversity').then(function () {
+      //       map.addLayer(layer)
+      //     })
+      //   })
+      // })
     },
     exportMap() {
 

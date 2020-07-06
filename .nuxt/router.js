@@ -3,8 +3,15 @@ import Router from 'vue-router'
 import { interopDefault } from './utils'
 import scrollBehavior from './router.scrollBehavior.js'
 
-const _b6a43372 = () => interopDefault(import('../pages/ol.vue' /* webpackChunkName: "pages/ol" */))
-const _4aa98cd8 = () => interopDefault(import('../pages/index.vue' /* webpackChunkName: "pages/index" */))
+const _adbd2d8e = () => interopDefault(import('..\\pages\\ol.vue' /* webpackChunkName: "pages/ol" */))
+const _48dccca6 = () => interopDefault(import('..\\pages\\index.vue' /* webpackChunkName: "pages/index" */))
+
+// TODO: remove in Nuxt 3
+const emptyFn = () => {}
+const originalPush = Router.prototype.push
+Router.prototype.push = function push (location, onComplete = emptyFn, onAbort) {
+  return originalPush.call(this, location, onComplete, onAbort)
+}
 
 Vue.use(Router)
 
@@ -16,18 +23,18 @@ export const routerOptions = {
   scrollBehavior,
 
   routes: [{
-      path: "/ol",
-      component: _b6a43372,
-      name: "ol"
-    }, {
-      path: "/",
-      component: _4aa98cd8,
-      name: "index"
-    }],
+    path: "/ol",
+    component: _adbd2d8e,
+    name: "ol"
+  }, {
+    path: "/",
+    component: _48dccca6,
+    name: "index"
+  }],
 
   fallback: false
 }
 
-export function createRouter() {
+export function createRouter () {
   return new Router(routerOptions)
 }
