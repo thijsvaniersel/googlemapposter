@@ -3,12 +3,14 @@
     "name": "ol",
     "path": "/ol",
     "component": "C:\\\\lokale projecten\\\\web\\\\googlemapsposter\\\\googlemapposter\\\\pages\\\\ol.vue",
-    "chunkName": "pages/ol"
+    "chunkName": "pages/ol",
+    "_name": "_adbd2d8e"
   },
   {
     "name": "index",
     "path": "/",
     "component": "C:\\\\lokale projecten\\\\web\\\\googlemapsposter\\\\googlemapposter\\\\pages\\\\index.vue",
-    "chunkName": "pages/index"
+    "chunkName": "pages/index",
+    "_name": "_48dccca6"
   }
 ]

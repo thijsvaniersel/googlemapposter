@@ -11,6 +11,10 @@
         <input type="radio" id="airplane" value="airplane" v-model="type">
         <label for="airplane">Airplane</label>
       </div>
+      <div class="route_type">
+        <input type="radio" id="train" value="train" v-model="type">
+        <label for="train">Train</label>
+      </div>
        <div class="address">
          <GmapAutocomplete @place_changed="addAddressMethod" :value="search" />
         </div>
