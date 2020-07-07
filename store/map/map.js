@@ -39,7 +39,7 @@ const mutations = {
     var count = state.routes.length -1
 
     // add new object if type is different
-    if(lastRoute.type !== type){
+    if(state.routes.length > 1 && lastRoute.type !== type){
 
       // krijg laatste locatie in de laatste route
       let previousLocation = lastRoute.locations.slice(-1)
@@ -88,6 +88,16 @@ const mutations = {
           state.routes[count].route = routeArrayFromOSRM.map(function(l) {
             return l.reverse();
           });
+        })
+      } else if(type == 'train') {
+        route.getPublicTransitRoute(locations).then((data) => {
+
+          // krijg de compressed geo uit de API call
+          let compressedRouteGeo = data.routes[0].sections[1].polyline
+          console.log(compressedRouteGeo);
+
+          // state.routes[count].route = this.$polyline.decode(compressedRouteGeo)
+          console.log(this.$polyline.decode(compressedRouteGeo))
         })
       } else {
         state.routes[count].route = locations
