@@ -53,30 +53,42 @@
                 <vl-geom-line-string :coordinates="route.route"></vl-geom-line-string>
                 <vl-style-box>
                   <vl-style-fill color="white"></vl-style-fill>
-                  <!-- auto lijn -->
-                  <vl-style-stroke
-                    v-if="route.type == 'car'"
-                    color="red"
-                    :width="6"
-                  ></vl-style-stroke>
                   <!-- vliegtuig lijn -->
                   <vl-style-stroke
                     v-if="route.type == 'airplane'"
-                    color="blue"
-                    :width="6"
+                    color="#27c5c9"
+                    :width="strokeWidth"
+                    :line-dash="[20, 20]"
+                  ></vl-style-stroke>
+                  <!-- auto lijn -->
+                  <vl-style-stroke
+                    v-if="route.type == 'car'"
+                    color="#27c5c9"
+                    :width="strokeWidth"
+                  ></vl-style-stroke>
+                  <!-- trein lijn -->
+                  <vl-style-stroke
+                    v-if="route.type == 'train'"
+                    color="#27c5c9"
+                    :width="strokeWidth"
+                    :line-dash="[3, 5, 30, 5]"
                   ></vl-style-stroke>
                 </vl-style-box>
               </vl-feature>
 
 
               <vl-feature v-for="(route, index) in routes" :key="index + '_dot'" v-if="routes[0].locations.length > 0">
-                <vl-geom-multi-point :coordinates="route.locations"></vl-geom-multi-point>
-                <vl-style-box>
-                  <vl-style-circle :radius="10">
-                    <vl-style-fill color="white"></vl-style-fill>
-                    <vl-style-stroke color="red"></vl-style-stroke>
-                  </vl-style-circle>
-                </vl-style-box>
+                  <vl-geom-multi-point :coordinates="route.locations"></vl-geom-multi-point>
+                  <vl-style-box>
+                    <vl-style-icon v-if="route.type == 'train'" src="/map/train.svg" :scale="0.05"></vl-style-icon>
+                    <vl-style-icon v-if="route.type == 'car'" src="/map/car.svg" :scale="0.05"></vl-style-icon>                    
+                    <vl-style-icon v-if="route.type == 'plane'" src="/map/plane.svg" :scale="0.05"></vl-style-icon>
+                    <!-- <vl-style-circle :radius="10">
+                      <vl-style-fill color="white"></vl-style-fill>
+                      <vl-style-stroke color="#27c5c9"></vl-style-stroke>
+                    </vl-style-circle> -->
+                  </vl-style-box>
+
               </vl-feature>
 
             </vl-source-vector>
@@ -109,6 +121,7 @@ export default {
 
   data() {
     return {
+      strokeWidth: 4,
       zoom: 10,
       features: [],
       format: 'a2',
@@ -125,8 +138,13 @@ export default {
       routes() {
         return this.$store.state.map.routes
       },
-      center: function() {
-        return this.$store.state.map.center
+      center: {
+        get(){
+          return this.$store.state.map.center
+        },
+        set(newName){
+          return newName
+        }
       },
       style() {
         return this.$store.state.style.style

@@ -64,10 +64,21 @@ export default {
       .get(apiUrl)
       .then(response => {
 
-          let data = response.data.routes[0].sections[1].polyline
 
 
-          return this.decode(data)
+          let returnArr = []
+          var i;
+          for (i = 0; i < response.data.routes[0].sections.length; i++) {
+            let data = response.data.routes[0].sections[i].polyline
+            let decoded = this.decode(data).polyline
+
+            // console.log(this.decode(data).polyline)
+            returnArr = returnArr.concat(decoded);
+          }
+
+          console.log(returnArr)
+
+          return returnArr
 
           // return response.data
       });

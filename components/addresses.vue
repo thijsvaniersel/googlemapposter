@@ -7,7 +7,7 @@
           <div v-if="index == 0">
             <iconType :iconString="route.type" />
           </div>
-          <div v-if="routes[index-1] !== undefined && route.type !== routes[index-1].type">
+          <div v-if="routes[index-1] !== undefined">
             <iconType :iconString="route.type" />
           </div>
 

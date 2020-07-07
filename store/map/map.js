@@ -6,7 +6,7 @@ const state = {
   center: [4.4777326,51.9244201],
   routes: [
     {
-      type: "car",
+      type: "",
       locations: [],
       names: [],
       route: []
@@ -34,12 +34,17 @@ const mutations = {
     }
 
     // check de laatste route in de huidige state
-    var lastRoute = state.routes[state.routes.length - 1];
+    var lastRoute = state.routes.length == 1 ? state.routes[0] : state.routes[state.routes.length - 1];
     var type = payload.type
     var count = state.routes.length -1
 
-    // add new object if type is different
-    if(state.routes.length > 1 && lastRoute.type !== type){
+    // fill type for first
+    if(state.routes[0].locations.length == 1){
+      state.routes[0].type = type
+    }
+
+    // add a new route if it is not the first address
+    if(state.routes[0].locations.length == 2){
 
       // krijg laatste locatie in de laatste route
       let previousLocation = lastRoute.locations.slice(-1)
@@ -73,8 +78,13 @@ const mutations = {
       state.center = [lng,lat]
     }
 
-    // Make this to points to a route
-    if(locations.length > 1){
+    // calculate route
+    if(state.routes[0].locations.length > 1){
+
+      console.log(count)
+      console.log(type)
+      console.log(locations)
+
       if(type == 'car' || type == 'bicycle' || type == 'walk'){
         route.getRoutePolyline(locations, type).then((data) => {
 
@@ -91,13 +101,10 @@ const mutations = {
         })
       } else if(type == 'train') {
         route.getPublicTransitRoute(locations).then((data) => {
-
-          // krijg de compressed geo uit de API call
-          let compressedRouteGeo = data.routes[0].sections[1].polyline
-          console.log(compressedRouteGeo);
-
-          // state.routes[count].route = this.$polyline.decode(compressedRouteGeo)
-          console.log(this.$polyline.decode(compressedRouteGeo))
+          // draai Lat en Lng weer om voor Openlayers
+          state.routes[count].route = data.map(function(l) {
+            return l.reverse();
+          });
         })
       } else {
         state.routes[count].route = locations
