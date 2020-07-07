@@ -12,11 +12,11 @@ import { createStore } from './store.js'
 
 /* Plugins */
 
-import nuxt_plugin_bootstrapvue_557c86b6 from 'nuxt_plugin_bootstrapvue_557c86b6' // Source: .\\bootstrap-vue.js (mode: 'all')
-import nuxt_plugin_axios_4ddc9714 from 'nuxt_plugin_axios_4ddc9714' // Source: .\\axios.js (mode: 'all')
-import nuxt_plugin_googleMaps_67765294 from 'nuxt_plugin_googleMaps_67765294' // Source: ..\\plugins\\googleMaps (mode: 'client')
-import nuxt_plugin_vuelayers_224ac916 from 'nuxt_plugin_vuelayers_224ac916' // Source: ..\\plugins\\vuelayers.js (mode: 'client')
-import nuxt_plugin_polyline_dbe5329e from 'nuxt_plugin_polyline_dbe5329e' // Source: ..\\plugins\\polyline.js (mode: 'client')
+import nuxt_plugin_bootstrapvue_21e033f5 from 'nuxt_plugin_bootstrapvue_21e033f5' // Source: ./bootstrap-vue.js (mode: 'all')
+import nuxt_plugin_axios_9ff70874 from 'nuxt_plugin_axios_9ff70874' // Source: ./axios.js (mode: 'all')
+import nuxt_plugin_googleMaps_67765294 from 'nuxt_plugin_googleMaps_67765294' // Source: ../plugins/googleMaps (mode: 'client')
+import nuxt_plugin_vuelayers_224ac916 from 'nuxt_plugin_vuelayers_224ac916' // Source: ../plugins/vuelayers.js (mode: 'client')
+import nuxt_plugin_polyline_dbe5329e from 'nuxt_plugin_polyline_dbe5329e' // Source: ../plugins/polyline.js (mode: 'client')
 
 // Component: <ClientOnly>
 Vue.component(ClientOnly.name, ClientOnly)
@@ -192,12 +192,12 @@ async function createApp(ssrContext, config = {}) {
   }
   // Plugin execution
 
-  if (typeof nuxt_plugin_bootstrapvue_557c86b6 === 'function') {
-    await nuxt_plugin_bootstrapvue_557c86b6(app.context, inject)
+  if (typeof nuxt_plugin_bootstrapvue_21e033f5 === 'function') {
+    await nuxt_plugin_bootstrapvue_21e033f5(app.context, inject)
   }
 
-  if (typeof nuxt_plugin_axios_4ddc9714 === 'function') {
-    await nuxt_plugin_axios_4ddc9714(app.context, inject)
+  if (typeof nuxt_plugin_axios_9ff70874 === 'function') {
+    await nuxt_plugin_axios_9ff70874(app.context, inject)
   }
 
   if (process.client && typeof nuxt_plugin_googleMaps_67765294 === 'function') {

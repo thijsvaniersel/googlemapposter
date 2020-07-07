@@ -1,7 +1,7 @@
 <template>
   <section class="Add_address">
      <h2>Add an address</h2>
-     {{ search }}
+     {{ type }}
      <div class="route">
        <div class="route_type">
          <input type="radio" id="car" value="car" v-model="type">
@@ -36,8 +36,6 @@ export default {
 
     methods: {
       addAddressMethod(address) {
-
-console.log(this.search)
 
         this.search = ''
 

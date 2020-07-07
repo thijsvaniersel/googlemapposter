@@ -2,15 +2,15 @@
   {
     "name": "ol",
     "path": "/ol",
-    "component": "C:\\\\lokale projecten\\\\web\\\\googlemapsposter\\\\googlemapposter\\\\pages\\\\ol.vue",
+    "component": "/Users/thijsvaniersel/Desktop/Google maps poster/pages/ol.vue",
     "chunkName": "pages/ol",
-    "_name": "_adbd2d8e"
+    "_name": "_b6a43372"
   },
   {
     "name": "index",
     "path": "/",
-    "component": "C:\\\\lokale projecten\\\\web\\\\googlemapsposter\\\\googlemapposter\\\\pages\\\\index.vue",
+    "component": "/Users/thijsvaniersel/Desktop/Google maps poster/pages/index.vue",
     "chunkName": "pages/index",
-    "_name": "_48dccca6"
+    "_name": "_4aa98cd8"
   }
 ]
