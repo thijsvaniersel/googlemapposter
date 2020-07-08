@@ -31,12 +31,12 @@
           -->
           <vl-layer-tile>
             <vl-source-xyz
+              cross-origin="Anonymous"
               url="https://api.mapbox.com/styles/v1/thijsvaniersel/ckca4nrcp1uwc1jo0m2mf90k3/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidGhpanN2YW5pZXJzZWwiLCJhIjoiY2tjOWR6ejloMWttYTJ2bG0wOWF2ZGlkZyJ9.aBDTsgvAz7ufZX5TnHrPOA"
             >
             </vl-source-xyz>
           </vl-layer-tile>
 
-          {{ style }}
           <!-- <vl-layer-vector render-mode="image">
             <vl-source-vector :url="'/assets/map/style.json'"/>
             <vl-source-vector :url="'https://api.mapbox.com/styles/v1/thijsvaniersel/ckca4nrcp1uwc1jo0m2mf90k3/wmts?access_token=pk.eyJ1IjoidGhpanN2YW5pZXJzZWwiLCJhIjoiY2tjOWR6ejloMWttYTJ2bG0wOWF2ZGlkZyJ9.aBDTsgvAz7ufZX5TnHrPOA'"></vl-source-vector>
@@ -81,7 +81,7 @@
                   <vl-geom-multi-point :coordinates="route.locations"></vl-geom-multi-point>
                   <vl-style-box>
                     <vl-style-icon v-if="route.type == 'train'" src="/map/train.svg" :scale="0.05"></vl-style-icon>
-                    <vl-style-icon v-if="route.type == 'car'" src="/map/car.svg" :scale="0.05"></vl-style-icon>                    
+                    <vl-style-icon v-if="route.type == 'car'" src="/map/car.svg" :scale="0.05"></vl-style-icon>
                     <vl-style-icon v-if="route.type == 'plane'" src="/map/plane.svg" :scale="0.05"></vl-style-icon>
                     <!-- <vl-style-circle :radius="10">
                       <vl-style-fill color="white"></vl-style-fill>
@@ -104,7 +104,7 @@
 var dims = {
   a0: [1189, 841],
   a1: [841, 594],
-  a2: [594, 420],
+  a2: [420, 594],
   a3: [420, 297],
   a4: [297, 210],
   a5: [210, 148]
@@ -122,7 +122,7 @@ export default {
   data() {
     return {
       strokeWidth: 4,
-      zoom: 10,
+      zoom: 2,
       features: [],
       format: 'a2',
       resolution: 72,
@@ -151,12 +151,13 @@ export default {
       }
   },
 
-  created(){
-
+  mounted(){
+    // this.$store.dispatch('map/setTestContent')
   },
 
   methods: {
     onMapCreated () {
+
       // var layer = new VectorTileLayer({
       //   renderMode: 'vector',
       //   source: new VectorTileSource({
@@ -178,40 +179,40 @@ export default {
 
       if(process.client){
 
-        this.fit()
+        // this.fit()
 
         const jsPDF = require('jspdf');
 
         var map = this.$refs.map.$map;
-        var dim = dims[this.format];
-        var width = Math.round(dim[0] * this.resolution / 25.4);
-        var height = Math.round(dim[1] * this.resolution / 25.4);
-        var size = /** @type {module:ol/size~Size} */ (map.getSize());
-        var extent = this.$refs.vectorSource.$source.getExtent();
+              var dim = dims[this.format];
+              var width = Math.round(dim[0] * this.resolution / 25.4);
+              var height = Math.round(dim[1] * this.resolution / 25.4);
+              var size = /** @type {module:ol/size~Size} */ (map.getSize());
+              var extent = map.getView().calculateExtent(size);
 
-        this.message = 'exporting...';
+              this.message = 'exporting...';
 
-        map.once('rendercomplete', function(event) {
-          var canvas = event.context.canvas;
-          var data = canvas.toDataURL('image/jpeg');
-          var pdf = new jsPDF('portait', undefined, this.format);
-          pdf.addImage(data, 'JPEG', 0, 0, dim[0], dim[1]);
-          pdf.save('map.pdf');
-          // Reset original map size
-          map.setSize(size);
-          map.getView().fit(extent, {
-            size: size
-          });
+              map.once('rendercomplete', function(event) {
+                var canvas = event.context.canvas;
+                var data = canvas.toDataURL('image/jpeg');
+                var pdf = new jsPDF('portrait', undefined, this.format);
+                pdf.addImage(data, 'JPEG', 0, 0, dim[0], dim[1]);
+                pdf.save('map.pdf');
+                // Reset original map size
+                map.setSize(size);
+                map.getView().fit(extent, {
+                  size: size
+                });
 
-          this.message = '';
-        });
+                this.message = '';
+              });
 
-        // Set print size
-        var printSize = [width, height];
-        map.setSize(printSize);
-        map.getView().fit(extent, {
-          size: printSize
-        });
+              // Set print size
+              var printSize = [width, height];
+              map.setSize(printSize);
+              map.getView().fit(extent, {
+                size: printSize
+              });
       } // end if process client
     },
     fit () {

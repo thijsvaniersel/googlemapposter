@@ -20,12 +20,44 @@ const getters = {}
 // actions
 const actions = {
   changeAddress(context, payload){
-      context.commit('setAddress', payload)
+    context.commit('setAddress', payload)
+  },
+  setTestContent(context){
+    context.commit('testContent')
   }
 }
 
 // mutations
 const mutations = {
+  testContent(state){
+
+    let locations = [
+      [4.4970097,52.1601144],
+      [4.4777326,51.9244201]
+    ]
+
+    state.routes[0].locations = locations
+
+    state.routes[0].names = [
+      '<span class="locality">Leiden</span>, <span class="country-name">Nederland</span>',
+      '<span class="locality">Rotterdam</span>, <span class="country-name">Nederland</span>'
+    ]
+
+    route.getRoutePolyline(locations, 'car').then((data) => {
+
+      // krijg de compressed geo uit de API call
+      let compressedRouteGeo = data.routes[0].geometry
+
+      // gebruik de polyline plugin om deze te decoden naar een array van punten
+      let routeArrayFromOSRM = this.$polyline.decode(compressedRouteGeo)
+
+      // draai de lat en lng om voor OSRM en zet in de route property van deze route
+      state.routes[0].route = routeArrayFromOSRM.map(function(l) {
+        return l.reverse();
+      });
+    })
+
+  },
   setAddress(state, payload){
 
     // als er geen echt adres in zit, voeg niet toe
@@ -80,10 +112,6 @@ const mutations = {
 
     // calculate route
     if(state.routes[0].locations.length > 1){
-
-      console.log(count)
-      console.log(type)
-      console.log(locations)
 
       if(type == 'car' || type == 'bicycle' || type == 'walk'){
         route.getRoutePolyline(locations, type).then((data) => {

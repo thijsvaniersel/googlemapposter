@@ -39,7 +39,7 @@ export default {
 
         this.search = ''
 
-        console.log(this.search)
+        console.log(address)
         // set address one in store
         let payloadAddress = {
             address: address,
