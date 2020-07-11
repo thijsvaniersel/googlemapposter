@@ -140,7 +140,7 @@ const mutations = {
     }
 
     // add name in different array omdat deze niet mee moet gaan in de url
-    state.routes[count].names.push(payload.address.adr_address)
+    state.routes[count].names.push(payload.address.formatted_address)
 
   }
 }
