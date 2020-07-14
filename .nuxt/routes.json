@@ -1,12 +1,5 @@
 [
   {
-    "name": "ol",
-    "path": "/ol",
-    "component": "/Users/thijsvaniersel/Desktop/Google maps poster/pages/ol.vue",
-    "chunkName": "pages/ol",
-    "_name": "_b6a43372"
-  },
-  {
     "name": "index",
     "path": "/",
     "component": "/Users/thijsvaniersel/Desktop/Google maps poster/pages/index.vue",

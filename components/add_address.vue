@@ -1,7 +1,6 @@
 <template>
   <section class="Add_address">
      <h2>Add an address</h2>
-     {{ type }}
      <div class="route">
        <div class="route_type">
          <input type="radio" id="car" value="car" v-model="type">
@@ -16,7 +15,7 @@
         <label for="train">Train</label>
       </div>
        <div class="address">
-         <GmapAutocomplete @place_changed="addAddressMethod" :value="search" />
+         <GmapAutocomplete @place_changed="addAddressMethod" placeholder="Please type your address" ref="autocomplete"/>
         </div>
      </div>
 
@@ -29,7 +28,6 @@ export default {
 
     data() {
         return {
-            search: '',
             type: 'car'
         }
     },
@@ -37,9 +35,8 @@ export default {
     methods: {
       addAddressMethod(address) {
 
-        this.search = ''
+        this.$refs.autocomplete.$el.value = ''
 
-        console.log(address)
         // set address one in store
         let payloadAddress = {
             address: address,
@@ -56,41 +53,48 @@ export default {
 .route_type{
   display: inline;
 }
-.address {
-    margin: 0;
-    border-bottom: 1px solid #dedede;
-    padding-bottom: 2em;
+.Add_address {
+  background: #b6dbb7;
+  padding: .5em;
+  color: #406b42;
+  border-radius: 3px;
 
-    h2 {
-        font-size: 16px;
-        line-height: 23px;
-    }
+  h2 {
+    font-size: 20px;
+    line-height: 23px;
+    text-align: center;
+    margin: 1em 0;
+  }
 
-    p {
-    line-height: 6px;
-    color: $gray;
-    }
+  .address {
+      margin: 0;
 
-    input {
-    width: 100%;
-    border: none;
-    padding: 1em;
-    background: $light-gray;
-    color: $dark-blue;
-    font-size: 18px;
-    border: 1px solid $light-gray;
-    transition: .3s all ease;
+      p {
+        line-height: 6px;
+        color: $gray;
+      }
 
-    &:focus {
-        outline: none;
-        background: none;
-        border: 1px solid $light-gray;
-    }
+      input {
+      width: 100%;
+      border: none;
+      padding: 1em;
+      background: $light-gray;
+      color: $dark-blue;
+      font-size: 18px;
+      border: 1px solid $light-gray;
+      transition: .3s all ease;
+      background: white;
 
-    &.filled {
-        background: $light-green;
-        color: $green;
-    }
-    }
+      &:focus {
+          outline: none;
+          border: 1px solid $light-gray;
+      }
+
+      &.filled {
+          background: $light-green;
+          color: $green;
+      }
+      }
+  }
 }
 </style>

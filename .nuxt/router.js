@@ -3,7 +3,6 @@ import Router from 'vue-router'
 import { interopDefault } from './utils'
 import scrollBehavior from './router.scrollBehavior.js'
 
-const _b6a43372 = () => interopDefault(import('../pages/ol.vue' /* webpackChunkName: "pages/ol" */))
 const _4aa98cd8 = () => interopDefault(import('../pages/index.vue' /* webpackChunkName: "pages/index" */))
 
 // TODO: remove in Nuxt 3
@@ -17,16 +16,12 @@ Vue.use(Router)
 
 export const routerOptions = {
   mode: 'history',
-  base: decodeURI('/map/'),
+  base: decodeURI('/poster/'),
   linkActiveClass: 'nuxt-link-active',
   linkExactActiveClass: 'nuxt-link-exact-active',
   scrollBehavior,
 
   routes: [{
-    path: "/ol",
-    component: _b6a43372,
-    name: "ol"
-  }, {
     path: "/",
     component: _4aa98cd8,
     name: "index"

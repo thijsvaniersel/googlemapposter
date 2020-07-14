@@ -15,6 +15,7 @@
             <div v-if="route.names[indexaddress] !== undefined" v-html="route.names[indexaddress]" class="route_address"></div>
           </div>
         </div>
+
         <!-- toon adres als er nog geen routes zijn -->
         <addAddress/>
 
@@ -33,9 +34,9 @@ export default {
     },
 
     computed: {
-        routes: function() {
-            return this.$store.state.map.routes
-        }
+      routes: function() {
+        return this.$store.state.map.routes
+      }
     }
 }
 </script>
@@ -43,17 +44,24 @@ export default {
 <style scoped lang="scss">
 .create {
   padding: 1em;
-
+  height: 80vh;
+  overflow-y: scroll;
   .route {
     border: 1px solid #dedede;
+    background: #f2f2f2;
     padding: 1em;
     margin-bottom: 1em;
+    -webkit-box-shadow: 0px 0px 8px 0px rgba(204,204,204,1);
+    -moz-box-shadow: 0px 0px 8px 0px rgba(204,204,204,1);
+    box-shadow: 0px 0px 8px 0px rgba(204,204,204,1);
 
-    .route_address {
-      padding-left: 1em;
+    .address {
+      background: white;
+      margin-bottom: .3em;
+      border-radius: 3px;
 
-      &::before {
-        content: '- '
+      .route_address {
+        padding: .5em;
       }
     }
   }

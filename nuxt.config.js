@@ -1,7 +1,7 @@
 const pkg = require('./package')
 
 module.exports = {
-  mode: 'universal',
+  mode: 'spa',
 
   /*
   ** Headers of the page
@@ -41,7 +41,7 @@ module.exports = {
   */
   router: {
     // base: process.env.NODE_ENV !== 'production' ? '' : '/mmap/'
-    base: '/map/'
+    base: '/poster'
   },
 
   /*
