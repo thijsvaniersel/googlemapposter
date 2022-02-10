@@ -20,7 +20,7 @@
     "bootstrap-vue": "^2.0.0-beta",
     "cross-env": "^5.2.0",
     "jspdf": "^1.5.3",
-    "node-sass": "^4.10.0",
+    "node-sass": "^7.0.0",
     "nuxt": "^2.0.0",
     "ol": "^6.3.1",
     "sass-loader": "^7.1.0",
